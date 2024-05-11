@@ -17,22 +17,28 @@ public class OrderControllerTest {
     @Test
     public void testCreateOrder() {
         // Créer un mock pour OrderService
-        OrderService orderServiceMock = mock(OrderService.class);
+        OrderDao orderDaoMock = mock(OrderDao.class);
+        OrderService orderService=new OrderService(orderDaoMock);
 
         // Créer un mock pour OrderDao
-        OrderDao orderDaoMock = mock(OrderDao.class);
+
+        Order order = new Order(1, "John Doe", 100.0);
+
+
+        doAnswer(invocation -> {
+            // Faire quelque chose ici si nécessaire
+            return null; // La méthode est de type void, donc retourner null
+        }).when(orderDaoMock).saveOrder(order);
 
         // Créer une instance de OrderController en lui passant les mocks
-        OrderController orderController = new OrderController(orderServiceMock);
+        OrderController orderController = new OrderController(orderService);
 
         // Définir le comportement attendu pour les mocks
-        Order order = new Order(1, "John Doe", 100.0);
 
         // Appeler la méthode à tester
         orderController.createOrder(order);
 
         // Vérifier que la méthode createOrder de OrderService est appelée avec le bon argument
-        verify(orderServiceMock).createOrder(order);
 
         // Vérifier que la méthode saveOrder de OrderDao est appelée avec l'objet de commande créé
         verify(orderDaoMock).saveOrder(order);
